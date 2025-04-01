@@ -1,0 +1,122 @@
+.about-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  margin-top: 20px;
+}
+
+.nav-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #6a0dad;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 280px;
+  text-align: center;
+  justify-content: center;
+  max-width: 300px;
+}
+
+.nav-button:hover {
+  background-color: #5c029c;
+}
+
+@media screen and (min-width: 768px) {
+  .button-container {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .nav-button {
+    width: auto;
+  }
+}
+
+.input-fields {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+
+h3 {
+  text-align: center;
+}
+
+.Date-input {
+  width: 227px;
+}
+
+.submit {
+  width: 350px;
+  justify-content: center;
+
+}
+
+.table-sales-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  margin-top: 150px;
+}
+
+.input-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+
+/* Add to your existing CSS */
+.table-container {
+  border: 1px solid #ddd;
+  margin-left: 120px;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table thead {
+  position: sticky;
+  top: 0;
+  background-color: rgb(51, 150, 145);
+  color: white;
+}
+
+.custom-table th, 
+.custom-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.custom-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.icon-button {
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  margin: 0 3px;
+}
+
+.icon-button:hover {
+  opacity: 0.7;
+}

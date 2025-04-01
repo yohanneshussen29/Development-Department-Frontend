@@ -1,0 +1,82 @@
+.table-container {
+  height: 110px;
+  width: 100%;
+  max-width: 800px; /* Ensures it adapts to large screens */
+  overflow-x: auto;
+  max-height: 500px;
+  position: relative;
+  padding: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 1em;
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+table thead tr {
+  background-color: #009879;
+  color: white;
+}
+
+table th,
+table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+/* Responsive design for small screens */
+@media (max-width: 600px) {
+  .table-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  table {
+    font-size: 0.9em;
+  }
+
+  table th,
+  table td {
+    padding: 8px;
+  }
+}
+
+#editForm {
+  margin: 20px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 600px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+form input,
+form select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.icon-button {
+  display: flex;
+  cursor: pointer;
+  width: 90px;
+  padding: 5px;
+  justify-content: center;
+}
