@@ -47,8 +47,8 @@ function Home() {
         <>
             <div className='container center-container'>
                 <div className='one-two-div'>
-                    <img src="./public/one.png" alt="" className='one' />
-                    <img src="./public/two.png" alt="" className='two' />
+                    <img src="./one.png" alt="" className='one' />
+                    <img src="./two.png" alt="" className='two' />
                 </div>
                 <h2>እንኳን ወደ ደብረ ገነት ቅዱስ እስጢፋኖስ  ቅዱስ ሚካኤል ወቅድስት ማርያም ቤ/ክ  ፈለገ ብርሀን ሰንበት ት/ቤት የልማት ክፍል ፋይል ማደራጃ በሰላም መጡ ።</h2>
                 <Link to="/where">

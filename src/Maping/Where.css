@@ -1,4 +1,5 @@
-.about-container {
+/* General Styles (Unchanged) */
+.about-container { 
   text-align: center;
   padding: 20px;
 }
@@ -59,7 +60,6 @@ h3 {
 .submit {
   width: 350px;
   justify-content: center;
-
 }
 
 .table-sales-container {
@@ -76,8 +76,6 @@ h3 {
   justify-content: center;
 }
 
-
-/* Add to your existing CSS */
 .table-container {
   border: 1px solid #ddd;
   margin-left: 120px;
@@ -119,4 +117,95 @@ h3 {
 
 .icon-button:hover {
   opacity: 0.7;
+}
+
+.form__group {
+  position: relative;
+  padding: 20px 0 0;
+  width: 100%;
+  max-width: 180px;
+}
+
+.form__field {
+  font-family: inherit;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #9b9b9b;
+  outline: 0;
+  font-size: 17px;
+  color: #fff;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+}
+
+.form__field::placeholder {
+  color: transparent;
+}
+
+.form__field:placeholder-shown ~ .form__label {
+  font-size: 17px;
+  cursor: text;
+  top: 20px;
+}
+
+.form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 17px;
+  color: #302323;
+  pointer-events: none;
+}
+
+.form__field:focus {
+  padding-bottom: 6px;
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, #116399, #38caef);
+  border-image-slice: 1;
+}
+
+.form__field:focus ~ .form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 17px;
+  color: #38caef;
+  font-weight: 700;
+}
+
+/* Reset input */
+.form__field:required, .form__field:invalid {
+  box-shadow: none;
+}
+
+/* Dark Mode (Scoped Fix) */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: white;
+  }
+
+  .custom-table thead {
+    background-color: rgb(34, 34, 34);
+  }
+
+  .custom-table tbody tr:nth-child(even) {
+    background-color: #242424;
+  }
+
+  .custom-table tbody tr:hover {
+    background-color: #333333;
+  }
+
+  .form__field {
+    color: white;
+  }
+
+  .form__label {
+    color: #bbb;
+  }
 }
