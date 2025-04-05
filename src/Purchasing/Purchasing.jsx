@@ -1,11 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { 
+  TextField, 
+  Button, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow, 
+  Paper,
+  Typography,
+  Box,
+  useMediaQuery,
+  IconButton
+} from "@mui/material";
+import { Edit, Delete } from "@mui/icons-material";
 
 function Purchasing() {
-    const [date, setDate] = useState("");
-    const [totalMoney, setTotalMoney] = useState("");
+    const [formData, setFormData] = useState({
+        date: "",
+        totalMoney: "",
+        typeOfThing: "",
+        nameOfPurchaser: ""
+    });
     const [tableData, setTableData] = useState([]);
-    const [editIndex, setEditIndex] = useState(null);
+    const [editId, setEditId] = useState(null);
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         fetchPurchases();
@@ -15,93 +36,233 @@ function Purchasing() {
         try {
             const response = await fetch("https://development-department.onrender.com/api/purchases");
             if (!response.ok) throw new Error('Failed to fetch');
-            setTableData(await response.json());
+            const data = await response.json();
+            setTableData(data);
         } catch (error) {
             console.error('Fetch error:', error);
         }
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!date || !totalMoney) return;
+        const { date, totalMoney, typeOfThing, nameOfPurchaser } = formData;
+        
+        if (!date || !totalMoney || !typeOfThing || !nameOfPurchaser) {
+            alert("Please fill all fields");
+            return;
+        }
 
-        const url = editIndex === null 
-            ? "https://development-department.onrender.com/api/purchases" 
-            : `https://development-department.onrender.com/api/purchases/${tableData[editIndex]._id}`;
+        const purchaseData = {
+            dateOfArrival: date,
+            totalMoneySpent: parseFloat(totalMoney),
+            typeOfThing,
+            nameOfPurchaser
+        };
+
+        const url = editId 
+            ? `https://development-department.onrender.com/api/purchases/${editId}`
+            : "https://development-department.onrender.com/api/purchases";
+
+        const method = editId ? 'PUT' : 'POST';
 
         try {
             const response = await fetch(url, {
-                method: editIndex === null ? 'POST' : 'PUT',
+                method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ dateOfArrival: date, totalMoneySpent: totalMoney }),
+                body: JSON.stringify(purchaseData),
             });
 
             if (response.ok) {
-                setDate("");
-                setTotalMoney("");
-                setEditIndex(null);
-                fetchPurchases();
+                resetForm();
+                await fetchPurchases();
             }
         } catch (error) {
             console.error('Submit error:', error);
         }
     };
 
-    const handleDelete = async (index) => {
-        if (!window.confirm("Are you sure?")) return;
+    const handleEdit = (purchase) => {
+        setFormData({
+            date: purchase.dateOfArrival.split('T')[0],
+            totalMoney: purchase.totalMoneySpent.toString(),
+            typeOfThing: purchase.typeOfThing,
+            nameOfPurchaser: purchase.nameOfPurchaser
+        });
+        setEditId(purchase._id);
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this record?")) return;
         
         try {
-            await fetch(`https://development-department.onrender.com/api/purchases/${tableData[index]._id}`, {
+            await fetch(`https://development-department.onrender.com/api/purchases/${id}`, {
                 method: 'DELETE'
             });
-            fetchPurchases();
+            await fetchPurchases();
         } catch (error) {
             console.error('Delete error:', error);
         }
     };
 
+    const resetForm = () => {
+        setFormData({
+            date: "",
+            totalMoney: "",
+            typeOfThing: "",
+            nameOfPurchaser: ""
+        });
+        setEditId(null);
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+    };
+
     return (
-        <div className="table-sales-container">
-            <h3>የመጡ እቃዎች / Goods Received</h3>
-            <div className="input-fields">
-                <input
+        <Box sx={{ 
+            p: isMobile ? 1 : 3,
+            maxWidth: '100%',
+            overflowX: 'auto'
+        }}>
+            <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
+                የመጡ እቃዎች / Goods Received
+            </Typography>
+            
+            <Box 
+                component="form" 
+                onSubmit={handleSubmit}
+                sx={{ 
+                    mb: 3,
+                    display: 'grid',
+                    gap: 2,
+                    gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)'
+                }}
+            >
+                <TextField
                     type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
+                    name="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                    label="Date of Arrival"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    InputLabelProps={{ shrink: true }}
                 />
-                <input
+                <TextField
+                    name="typeOfThing"
+                    value={formData.typeOfThing}
+                    onChange={handleChange}
+                    label="Type of Thing"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                />
+                <TextField
+                    name="nameOfPurchaser"
+                    value={formData.nameOfPurchaser}
+                    onChange={handleChange}
+                    label="Name of Purchaser"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                />
+                <TextField
                     type="number"
-                    value={totalMoney}
-                    onChange={(e) => setTotalMoney(e.target.value)}
-                    placeholder="Total Money Spent"
+                    name="totalMoney"
+                    value={formData.totalMoney}
+                    onChange={handleChange}
+                    label="Total Money Spent (ETB)"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    InputProps={{ inputProps: { min: 0, step: "0.01" } }}
                 />
-                <button onClick={handleSubmit}>
-                    {editIndex === null ? 'Submit' : 'Update'}
-                </button>
-                <Link to="/Where"><button>ለመመለስ / To Return</button></Link>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Amount</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tableData.map((row, index) => (
-                        <tr key={row._id}>
-                            <td>{row.dateOfArrival}</td>
-                            <td>{row.totalMoneySpent}</td>
-                            <td>
-                                <button onClick={() => { setDate(row.dateOfArrival); setTotalMoney(row.totalMoneySpent); setEditIndex(index); }}>Edit</button>
-                                <button onClick={() => handleDelete(index)}>Delete</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+                
+                <Box sx={{ 
+                    display: 'flex',
+                    gap: 2,
+                    gridColumn: isMobile ? '1' : '1 / span 2'
+                }}>
+                    <Button 
+                        type="submit"
+                        variant="contained" 
+                        fullWidth
+                        size="large"
+                    >
+                        {editId ? 'Update' : 'Submit'}
+                    </Button>
+                    <Button 
+                        variant="outlined" 
+                        component={Link} 
+                        to="/Where"
+                        fullWidth
+                        size="large"
+                    >
+                        ለመመለስ / To Return
+                    </Button>
+                </Box>
+            </Box>
+
+            <TableContainer component={Paper} sx={{ maxHeight: '60vh', overflow: 'auto' }}>
+                <Table stickyHeader size={isMobile ? 'small' : 'medium'}>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Date</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Type</TableCell>
+                            {!isMobile && (
+                                <TableCell sx={{ fontWeight: 'bold' }}>Purchaser</TableCell>
+                            )}
+                            <TableCell sx={{ fontWeight: 'bold' }}>Amount (ETB)</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {tableData.map((row) => (
+                            <TableRow key={row._id}>
+                                <TableCell>{formatDate(row.dateOfArrival)}</TableCell>
+                                <TableCell>
+                                    {isMobile ? 
+                                        `${row.typeOfThing.substring(0, 15)}${row.typeOfThing.length > 15 ? '...' : ''}` : 
+                                        row.typeOfThing
+                                    }
+                                </TableCell>
+                                {!isMobile && (
+                                    <TableCell>{row.nameOfPurchaser}</TableCell>
+                                )}
+                                <TableCell>{row.totalMoneySpent.toFixed(2)}</TableCell>
+                                <TableCell>
+                                    <IconButton 
+                                        color="primary"
+                                        onClick={() => handleEdit(row)}
+                                        size="small"
+                                    >
+                                        <Edit fontSize={isMobile ? 'small' : 'medium'} />
+                                    </IconButton>
+                                    <IconButton 
+                                        color="error"
+                                        onClick={() => handleDelete(row._id)}
+                                        size="small"
+                                    >
+                                        <Delete fontSize={isMobile ? 'small' : 'medium'} />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Box>
     );
 }
 

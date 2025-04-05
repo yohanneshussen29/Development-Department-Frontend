@@ -10,9 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.6",
-    "@mui/material": "^6.4.6",
+    "@mui/material": "^6.4.10",
     "@mui/styled-engine": "^6.4.6",
     "ag-grid-community": "^33.1.1",
     "ag-grid-react": "^33.1.1",
